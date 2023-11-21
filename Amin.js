@@ -1,6 +1,6 @@
 const Label = "AminJs";
 
-export function createComponent(tagName) {
+export function createComponent(tagName, jsCallback, dependencies) {
   class Component extends HTMLElement {
     constructor() {
       super();
@@ -17,36 +17,33 @@ export function createComponent(tagName) {
       const text = await request.text();
       const styleElement = document.createElement("style");
       styleElement.innerHTML = text;
+
       this.shadowRoot.appendChild(styleElement);
-      // this.loadJS();
+      const reRenderer = jsCallback?.(this.shadowRoot);
+
+      if (jsCallback != null) {
+        window.addEventListener("appstateupdate", (event) => {
+          if (dependencies.includes(event.detail.key)) {
+            console.log(
+              Label,
+              "rerender",
+              tagName,
+              dependencies,
+              event.detail.key
+            );
+
+            reRenderer?.();
+          }
+        });
+      }
     }
-    // async loadJS() {
-    //   const jsFileUrl = `./templates/${tagName}/${tagName}.js`;
-    //   const scriptElement = document.createElement("script");
-    //   scriptElement.src = jsFileUrl;
-    //   const m = await import(jsFileUrl);
-    //   console.log(m.main())
-    //   // import main function from jsFileUrl and execute it
-
-    //   //   scriptElement.innerHTML = `
-    //   //     console.log("button2", document.currentScript);
-    //   // `;
-    //   // make scriptElement not be module
-
-    //   //   scriptElement.type = "module";
-    //   //   scriptElement.defer = true;
-    //   this.shadowRoot.appendChild(scriptElement);
-    // }
   }
   customElements.define(tagName, Component);
 }
 
 const Amin = {
   init: function () {
-    console.log(Label, "init");
-    window.addEventListener("DOMContentLoaded", function () {
-      console.log(Label, "DOMContentLoaded");
-    });
+    window.addEventListener("DOMContentLoaded", function () {});
   },
 
   router: {
@@ -65,7 +62,6 @@ const Amin = {
       Amin.router.routes = routes;
     },
     navigate: function (url) {
-      console.log(Label, "navigate to " + url);
       window.history.pushState({}, "", url);
       const pageContainer = document.getElementById("page-container");
       let pageElement;
@@ -74,13 +70,30 @@ const Amin = {
           pageElement = document.createElement(route[url]);
         }
       });
-      console.log("pageElement", pageElement, Amin.router.routes);
       pageContainer.children[0].remove();
       if (pageElement) {
         pageContainer.appendChild(pageElement);
       } else {
         pageContainer.appendChild(document.createElement("h1", "404"));
       }
+    },
+  },
+  state: {
+    data: { score: 0 },
+    init: function () {
+      Amin.state.data = new Proxy(Amin.state.data, {
+        set: function (target, key, value) {
+          window.dispatchEvent(
+            new CustomEvent("appstateupdate", { detail: { key, value } })
+          );
+          target[key] = value;
+          return true;
+        },
+        get: function (target, key) {
+          console.log(Label, "get", key, "from", target);
+          return target[key];
+        },
+      });
     },
   },
 };

@@ -1,35 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Home</title>
     <script src="./index.js" type="module" defer></script>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./index.css" />
+  </head>
 
-    <body>
+  <body>
+    <button id="btn">Click me</button>
 
-        <button id="btn">Click me</button>
+    <a href="/">Go To Home</a>
+    <a href="/about">Go To About</a>
 
-        <a href="/">Go To Home</a>
-        <a href="/about">Go To About</a>
-
-
-        <div id="page-container"/>
-        <custom-button></custom-button>
-    </body>
-<!-- run a script and pass a parameter to it -->
-    <script>
-        const script = document.createElement('script');
-        script.src = './index.js';
-        script.type = 'module';
-        script.setAttribute('data-foo', 'bar');
-        document.head.appendChild(script);
-        // to acceses the data-foo attribute in the script
-
-        console.log("test", document.currentScript);
-        // const foo = document.currentScript.getAttribute('data-foo');
-        // console.log(foo); // bar
-
-    </script>
+    <div id="page-container" />
+    <custom-button></custom-button>
+    <timer-display></timer-display>
+  </body>
 </html>
