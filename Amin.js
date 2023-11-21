@@ -48,11 +48,15 @@ const Amin = {
 
   router: {
     routes: [{ "/": "home-page" }],
-    contaienr_id: "page-container",
-    createRouter: function (routes, contaienr_id) {
-      if (contaienr_id != null) {
-        Amin.router.contaienr_id = contaienr_id;
+    container: null,
+    createRouter: function (routes, container) {
+      if (container == null) {
+        const error = new Error();
+        error.name = `${Label} Router`;
+        error.message = "Container is null";
+        throw error;
       }
+      Amin.router.container = container;
       document.querySelectorAll("a").forEach((a) => {
         a.addEventListener("click", (event) => {
           event.preventDefault();
@@ -64,21 +68,26 @@ const Amin = {
         event.preventDefault();
       });
       Amin.router.routes = routes;
+      Amin.router.navigate(window.location.pathname);
     },
     navigate: function (url) {
       window.history.pushState({}, "", url);
-      const pageContainer = document.getElementById(Amin.router.contaienr_id);
+      const pageContainer = Amin.router.container;
       let pageElement;
       Amin.router.routes.forEach((route) => {
         if (route[url]) {
           pageElement = document.createElement(route[url]);
         }
       });
-      pageContainer.children[0].remove();
+      pageContainer.children[0]?.remove();
       if (pageElement) {
         pageContainer.appendChild(pageElement);
       } else {
-        pageContainer.appendChild(document.createElement("h1", "404"));
+        pageContainer.appendChild(
+          document.createElement("h1", {
+            innerHTML: "404",
+          })
+        );
       }
     },
   },
@@ -102,4 +111,5 @@ const Amin = {
   },
 };
 
+window.Amin = Amin;
 export default Amin;
