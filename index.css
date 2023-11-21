@@ -1,12 +1,4 @@
 body {
-  background-color: aquamarine;
-}
-
-button {
-  background-color: #4caf50;
+  margin: 0;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border-radius: 4px;
-  cursor: pointer;
 }

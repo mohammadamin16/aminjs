@@ -48,7 +48,11 @@ const Amin = {
 
   router: {
     routes: [{ "/": "home-page" }],
-    createRouter: function (routes) {
+    contaienr_id: "page-container",
+    createRouter: function (routes, contaienr_id) {
+      if (contaienr_id != null) {
+        Amin.router.contaienr_id = contaienr_id;
+      }
       document.querySelectorAll("a").forEach((a) => {
         a.addEventListener("click", (event) => {
           event.preventDefault();
@@ -63,7 +67,7 @@ const Amin = {
     },
     navigate: function (url) {
       window.history.pushState({}, "", url);
-      const pageContainer = document.getElementById("page-container");
+      const pageContainer = document.getElementById(Amin.router.contaienr_id);
       let pageElement;
       Amin.router.routes.forEach((route) => {
         if (route[url]) {

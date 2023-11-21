@@ -1,0 +1,28 @@
+#header {
+  display: flex;
+  border-bottom: 1px solid #333333;
+  height: 40px;
+  width: calc(100% - 80px);
+  padding: 0 40px;
+  align-items: center;
+  justify-content: space-between;
+}
+#title {
+  color: #fff;
+  font-family: Roboto;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: normal;
+  cursor: pointer;
+}
+#example,
+#docs {
+  color: #898989;
+  font-family: Roboto;
+  font-style: normal;
+  font-size: medium;
+  cursor: pointer;
+  font-weight: 200;
+  line-height: normal;
+}
