@@ -16,5 +16,20 @@
 
 
         <div id="page-container"/>
+        <custom-button></custom-button>
     </body>
+<!-- run a script and pass a parameter to it -->
+    <script>
+        const script = document.createElement('script');
+        script.src = './index.js';
+        script.type = 'module';
+        script.setAttribute('data-foo', 'bar');
+        document.head.appendChild(script);
+        // to acceses the data-foo attribute in the script
+
+        console.log("test", document.currentScript);
+        // const foo = document.currentScript.getAttribute('data-foo');
+        // console.log(foo); // bar
+
+    </script>
 </html>
