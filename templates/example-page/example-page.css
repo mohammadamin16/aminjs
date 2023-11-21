@@ -1,0 +1,52 @@
+#container {
+  display: flex;
+  color: #e3e3e3;
+  font-family: Roboto;
+  font-size: 68px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+#row {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#add,
+#drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: #fff;
+  padding: 10px 10px;
+  flex-shrink: 0;
+  color: black;
+  font-size: 13px;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  transition: filter 0.2s ease-in-out;
+}
+
+#add:hover,
+#drop:hover {
+  filter: drop-shadow(0px 4px 27px #fff);
+}
+
+#counter {
+  color: #e3e3e3;
+  font-family: Roboto;
+  font-size: 53px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

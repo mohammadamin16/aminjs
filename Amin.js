@@ -1,29 +1,39 @@
 const Label = "AminJs";
 
+const TEMPLATE_DEFAULT_PATH = "./templates";
+
 export function createComponent(tagName, jsCallback, dependencies) {
   class Component extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({ mode: "open" });
-      fetch(`./templates/${tagName}/${tagName}.html`)
+      fetch(`${TEMPLATE_DEFAULT_PATH}/${tagName}/${tagName}.html`)
         .then((response) => response.text())
         .then((html) => {
           this.shadowRoot.innerHTML = html;
           this.loadCSS();
         });
     }
+
+    disconnectedCallback() {
+      this.cleanupFn?.();
+    }
+
     async loadCSS() {
-      const request = await fetch(`./templates/${tagName}/${tagName}.css`);
+      const request = await fetch(
+        `${TEMPLATE_DEFAULT_PATH}/${tagName}/${tagName}.css`
+      );
       const text = await request.text();
       const styleElement = document.createElement("style");
       styleElement.innerHTML = text;
 
       this.shadowRoot.appendChild(styleElement);
-      const reRenderer = jsCallback?.(this.shadowRoot);
+      const [reRendererFn, cleanupFn] = jsCallback?.(this.shadowRoot) || [];
+      this.cleanupFn = cleanupFn;
 
       if (jsCallback != null) {
         window.addEventListener("appstateupdate", (event) => {
-          if (dependencies.includes(event.detail.key)) {
+          if (!dependencies || dependencies.includes(event.detail.key)) {
             console.log(
               Label,
               "rerender",
@@ -32,7 +42,7 @@ export function createComponent(tagName, jsCallback, dependencies) {
               event.detail.key
             );
 
-            reRenderer?.();
+            reRendererFn?.();
           }
         });
       }
@@ -92,9 +102,9 @@ const Amin = {
     },
   },
   state: {
-    data: { score: 0 },
-    init: function () {
-      Amin.state.data = new Proxy(Amin.state.data, {
+    data: {},
+    init: function (init_data = {}) {
+      Amin.state.data = new Proxy(init_data, {
         set: function (target, key, value) {
           window.dispatchEvent(
             new CustomEvent("appstateupdate", { detail: { key, value } })
@@ -103,7 +113,6 @@ const Amin = {
           return true;
         },
         get: function (target, key) {
-          console.log(Label, "get", key, "from", target);
           return target[key];
         },
       });
