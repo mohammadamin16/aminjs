@@ -1,6 +1,6 @@
 const Label = "AminJs";
 
-const TEMPLATE_DEFAULT_PATH = "./templates";
+const TEMPLATE_DEFAULT_PATH = "/templates";
 
 export function createComponent(tagName, jsCallback, dependencies) {
   class Component extends HTMLElement {
@@ -34,14 +34,7 @@ export function createComponent(tagName, jsCallback, dependencies) {
       if (jsCallback != null) {
         window.addEventListener("appstateupdate", (event) => {
           if (!dependencies || dependencies.includes(event.detail.key)) {
-            console.log(
-              Label,
-              "rerender",
-              tagName,
-              dependencies,
-              event.detail.key
-            );
-
+            console.log(Label, "rerender", tagName, event.detail.key);
             reRendererFn?.();
           }
         });
@@ -53,18 +46,23 @@ export function createComponent(tagName, jsCallback, dependencies) {
 
 const Amin = {
   init: function () {
+    console.log(Label, "start");
     window.addEventListener("DOMContentLoaded", function () {});
   },
 
   router: {
+    home_page: "",
     routes: [{ "/": "home-page" }],
     container: null,
-    createRouter: function (routes, container) {
+    createRouter: function (routes, container, home_page) {
       if (container == null) {
         const error = new Error();
         error.name = `${Label} Router`;
         error.message = "Container is null";
         throw error;
+      }
+      if (home_page != null) {
+        Amin.router.home_page = home_page;
       }
       Amin.router.container = container;
       document.querySelectorAll("a").forEach((a) => {
@@ -81,7 +79,7 @@ const Amin = {
       Amin.router.navigate(window.location.pathname);
     },
     navigate: function (url) {
-      window.history.pushState({}, "", url);
+      window.history.pushState({}, "", Amin.router.home_page + url);
       const pageContainer = Amin.router.container;
       let pageElement;
       Amin.router.routes.forEach((route) => {
