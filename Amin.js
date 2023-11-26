@@ -2,67 +2,25 @@ const Label = "AminJs";
 
 const TEMPLATE_DEFAULT_PATH = "/templates";
 
-export function createComponent(tagName, jsCallback, dependencies) {
-  class Component extends HTMLElement {
-    constructor() {
-      super();
-      this.attachShadow({ mode: "open" });
-      fetch(`${TEMPLATE_DEFAULT_PATH}/${tagName}/${tagName}.html`)
-        .then((response) => response.text())
-        .then((html) => {
-          this.shadowRoot.innerHTML = html;
-          this.loadCSS();
-        });
-    }
-
-    disconnectedCallback() {
-      this.cleanupFn?.();
-    }
-
-    async loadCSS() {
-      const request = await fetch(
-        `${TEMPLATE_DEFAULT_PATH}/${tagName}/${tagName}.css`
-      );
-      const text = await request.text();
-      const styleElement = document.createElement("style");
-      styleElement.innerHTML = text;
-
-      this.shadowRoot.appendChild(styleElement);
-      const [reRendererFn, cleanupFn] = jsCallback?.(this.shadowRoot) || [];
-      this.cleanupFn = cleanupFn;
-
-      if (jsCallback != null) {
-        window.addEventListener("appstateupdate", (event) => {
-          if (!dependencies || dependencies.includes(event.detail.key)) {
-            console.log(Label, "rerender", tagName, event.detail.key);
-            reRendererFn?.();
-          }
-        });
-      }
-    }
-  }
-  customElements.define(tagName, Component);
-}
-
 const Amin = {
-  init: function () {
-    console.log(Label, "start");
-    window.addEventListener("DOMContentLoaded", function () {});
+  init: function (home_page) {
+    console.log(Label, "start...");
+    // window.addEventListener("DOMContentLoaded", function () {});
+    if (home_page != null) {
+      Amin.router.home_page = home_page;
+    }
   },
 
   router: {
     home_page: "",
     routes: [{ "/": "home-page" }],
     container: null,
-    createRouter: function (routes, container, home_page) {
+    createRouter: function (routes, container) {
       if (container == null) {
         const error = new Error();
         error.name = `${Label} Router`;
         error.message = "Container is null";
         throw error;
-      }
-      if (home_page != null) {
-        Amin.router.home_page = home_page;
       }
       Amin.router.container = container;
       document.querySelectorAll("a").forEach((a) => {
@@ -117,6 +75,54 @@ const Amin = {
     },
   },
 };
+
+export function createComponent(tagName, jsCallback, dependencies) {
+  class Component extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: "open" });
+      fetch(
+        `${
+          Amin.router.home_page + TEMPLATE_DEFAULT_PATH
+        }/${tagName}/${tagName}.html`
+      )
+        .then((response) => response.text())
+        .then((html) => {
+          this.shadowRoot.innerHTML = html;
+          this.loadCSS();
+        });
+    }
+
+    disconnectedCallback() {
+      this.cleanupFn?.();
+    }
+
+    async loadCSS() {
+      const request = await fetch(
+        `${
+          Amin.router.home_page + TEMPLATE_DEFAULT_PATH
+        }/${tagName}/${tagName}.css`
+      );
+      const text = await request.text();
+      const styleElement = document.createElement("style");
+      styleElement.innerHTML = text;
+
+      this.shadowRoot.appendChild(styleElement);
+      const [reRendererFn, cleanupFn] = jsCallback?.(this.shadowRoot) || [];
+      this.cleanupFn = cleanupFn;
+
+      if (jsCallback != null) {
+        window.addEventListener("appstateupdate", (event) => {
+          if (!dependencies || dependencies.includes(event.detail.key)) {
+            console.log(Label, "rerender", tagName, event.detail.key);
+            reRendererFn?.();
+          }
+        });
+      }
+    }
+  }
+  customElements.define(tagName, Component);
+}
 
 window.Amin = Amin;
 export default Amin;

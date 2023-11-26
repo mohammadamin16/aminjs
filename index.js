@@ -1,7 +1,8 @@
 import { createComponent } from "./Amin.js";
 import Amin from "./Amin.js";
 
-Amin.init();
+const isProduction = window.location.host.includes("github.io");
+Amin.init(isProduction ? "/aminjs" : "");
 
 Amin.state.init();
 
