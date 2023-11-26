@@ -11,6 +11,8 @@
 - Lazy load components by default
 - Lightweight (only 4KBs)
 
+### All of that with only *4KB* of javascript! (not minified)
+
 
 ### How to Do Routing then:
 ```javascript
