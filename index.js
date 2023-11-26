@@ -16,6 +16,7 @@ createComponent(
         { "/": "home-page" },
         { "/docs": "docs-page" },
         { "/example": "example-page" },
+        { "*": "home-page" },
       ],
       pageContainer,
       "/aminjs"

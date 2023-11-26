@@ -50,15 +50,18 @@ const Amin = {
         }
       });
       pageContainer.children[0]?.remove();
-      if (pageElement) {
-        pageContainer.appendChild(pageElement);
-      } else {
-        pageContainer.appendChild(
-          document.createElement("h1", {
+      if (!pageElement) {
+        const defaultPage = Amin.router.routes.find((route) => route["*"])["*"];
+        if (defaultPage) {
+          console.log(defaultPage);
+          pageElement = document.createElement(defaultPage);
+        } else {
+          pageElement = document.createElement("h1", {
             innerHTML: "404",
-          })
-        );
+          });
+        }
       }
+      pageContainer.appendChild(pageElement);
     },
   },
   state: {
