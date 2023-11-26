@@ -9,7 +9,6 @@
 - Modular css
 - No build process required.
 - Lazy load components by default
-- Lightweight (only 4KBs)
 
 ### All of that with only *4KB* of javascript! (not minified)
 
