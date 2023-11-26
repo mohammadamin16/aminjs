@@ -34,10 +34,14 @@ const Amin = {
         event.preventDefault();
       });
       Amin.router.routes = routes;
-      Amin.router.navigate(window.location.pathname);
+      Amin.router.navigate(window.location.pathname, false);
     },
-    navigate: function (url) {
-      window.history.pushState({}, "", Amin.router.home_page + url);
+    navigate: function (url, withHomePage = true) {
+      window.history.pushState(
+        {},
+        "",
+        withHomePage ? Amin.router.home_page : "" + url
+      );
       const pageContainer = Amin.router.container;
       let pageElement;
       Amin.router.routes.forEach((route) => {
