@@ -1,4 +1,5 @@
 # AminJS
+![AminJs Banner](banner.png)
 ## The ultimate web framework you need.
 
 #### Features:
