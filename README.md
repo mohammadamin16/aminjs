@@ -72,3 +72,15 @@ createComponet("tag-name", function jsCallbanck(){
 }, dependency_array)
 
 ```
+
+### Ok, But How to use it:
+```javascript
+  // just copy the Amin.js file in your project and import what you want
+
+
+  import Amin from "./Amin.js";
+
+
+  Amin.init();
+
+```
